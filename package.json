@@ -1,0 +1,37 @@
+{
+  "name": "project-management-web-app",
+  "version": "1.0.0",
+  "description": "Develop a project management web app using React (frontend), Node.js (backend), PostgreSQL (database), and TypeScript. Features include CRUD operations for projects and categories, plus filtering projects by category.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-validator": "^7.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.13.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/express": "^5.0.0",
+    "@types/jest": "^29.5.14",
+    "@types/jsonwebtoken": "^9.0.*",
+    "@types/node": "^22.10.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SomethingLikeDaniil/Project-Management-Web-App.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SomethingLikeDaniil/Project-Management-Web-App/issues"
+  },
+  "homepage": "https://github.com/SomethingLikeDaniil/Project-Management-Web-App#readme"
+}
