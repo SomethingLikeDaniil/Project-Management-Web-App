@@ -4,7 +4,11 @@ import { Pool } from 'pg';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { JwtPayload } from 'jsonwebtoken';
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
 import { validationResult } from "express-validator";
+import request from 'supertest';
+import { faker } from '@faker-js/faker';
 const { body } = require('express-validator');
 
 dotenv.config();
@@ -84,38 +88,43 @@ res.send("Bienvenue dans notre premiere API")
 // POST utilisateur
 app.post('/utilisateur', async (req: Request, res: Response): Promise<void> => {
   try {
-      console.log('Received body:', req.body);
-      const { nom, prenom, poste } = req.body;
+    console.log('Received body:', req.body);
 
-      if (!nom || !prenom || !poste) {
-          res.status(400).json({ error: "Missing required fields" });
-          return;
-      }
+    const { nom, prenom, poste } = req.body;
 
-      const query = `INSERT INTO "utilisateur" (nom, prenom, poste) VALUES ($1, $2, $3)`;
-      await pool.query(query, [nom, prenom, poste]);
+    if (!nom || !prenom || !poste) {
+      res.status(400).json({ error: "Missing required fields: nom, prenom, poste" });
+      return; 
+    }
 
-      console.log("Generated token:", token);
+    const query = `INSERT INTO "utilisateur" (id, nom, prenom, poste) VALUES (DEFAULT, $1, $2, $3)`;
 
-      res.status(201).json({ message: "User created" });
+    await pool.query(query, [nom, prenom, poste]);
+
+    console.log("Utilisateur inséré avec succès :", { nom, prenom, poste });
+
+    res.status(201).json({ message: "User created successfully", data: { nom, prenom, poste } });
   } catch (error) {
-      console.error('Error inserting user:', error);
-      res.status(500).json({ error: 'An error occurred while creating the user.' });
+    console.error('Error inserting user:', error);
+    res.status(500).json({ error: 'An error occurred while creating the user.' });
   }
 });
+
 
 // POST tache
 app.post('/tache', async (req: Request, res: Response): Promise<void> => {
   try {
-      console.log('Received body:', req.body);
       const { id_projet, nom, resume, numberperson, id_utilisateur, status } = req.body;
+
+      console.log(id_projet, nom, resume, numberperson, id_utilisateur, status);
+      
 
       if (!id_projet || !nom || !resume || !numberperson || !id_utilisateur || !status) {
           res.status(400).json({ error: "Missing required fields" });
           return;
       }
 
-      const query = `INSERT INTO "tache" (id_projet, nom, resume, numberperson, id_utilisateur, status) VALUES ($1, $2, $3, $4, $5, $6)`;
+      const query = `INSERT INTO "tache" (id, id_projet, nom, resume, numberperson, id_utilisateur, status) VALUES (DEFAULT, $1, $2, $3, $4, $5, $6)`;
       await pool.query(query, [id_projet, nom, resume, numberperson, id_utilisateur, status]);
 
       console.log("Generated token:", token);
@@ -138,7 +147,7 @@ app.post('/projet', async (req: Request, res: Response): Promise<void> => {
           return;
       }
 
-      const query = `INSERT INTO "tache" (id_categorie, nom, numberperson, id_utilisateur, resume) VALUES ($1, $2, $3, $4, $5)`;
+      const query = `INSERT INTO "projet" (id, id_categorie, nom, numberperson, id_utilisateur, resume) VALUES (DEFAULT, $1, $2, $3, $4, $5)`;
       await pool.query(query, [id_categorie, nom, numberperson, id_utilisateur, resume]);
 
       console.log("Generated token:", token);
@@ -146,7 +155,7 @@ app.post('/projet', async (req: Request, res: Response): Promise<void> => {
       res.status(201).json({ message: "User created" });
   } catch (error) {
       console.error('Error inserting user:', error);
-      res.status(500).json({ error: 'An error occurred while creating the user.' });
+      res.status(500).json({ error: 'An error occurred while creating the projet.' });
   }
 });
 
@@ -161,7 +170,7 @@ app.post('/categorie', async (req: Request, res: Response): Promise<void> => {
           return;
       }
 
-      const query = `INSERT INTO "categorie" (nom, resume) VALUES ($1, $2)`;
+      const query = `INSERT INTO "categorie" (id, nom, resume) VALUES (default, $1, $2)`;
       await pool.query(query, [nom, resume]);
 
       console.log("Generated token:", token);
@@ -175,10 +184,9 @@ app.post('/categorie', async (req: Request, res: Response): Promise<void> => {
 
 // ============================ UPDATE ============================
 // UPDATE utilisateur
-app.put('/utilisateur/:id', async (req: Request, res: Response): Promise<void> => {
+app.put('/utilisateur', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const { nom, prenom, poste } = req.body;
+    const { nom, prenom, poste, id } = req.body;
 
     const query = `UPDATE "utilisateur" SET nom = $1, prenom = $2, poste = $3 WHERE id = $4`;
     await pool.query(query, [nom, prenom, poste, id]);
@@ -191,10 +199,9 @@ app.put('/utilisateur/:id', async (req: Request, res: Response): Promise<void> =
 });
 
 // UPDATE projet
-app.put('/projet/:id', async (req: Request, res: Response): Promise<void> => {
+app.put('/projet', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const { id_categorie, nom, numberPerson, id_utilisateur, resume } = req.body;
+    const { id_categorie, nom, numberPerson, id_utilisateur, resume, id } = req.body;
 
     const query = `UPDATE "projet" SET id_categorie = $1, nom = $2, numberPerson = $3, id_utilisateur = $4, resume = $5 WHERE id = $6`;
     await pool.query(query, [id_categorie, nom, numberPerson, id_utilisateur, resume, id]);
@@ -207,10 +214,9 @@ app.put('/projet/:id', async (req: Request, res: Response): Promise<void> => {
 });
 
 // UPDATE categorie
-app.put('/categorie/:id', async (req: Request, res: Response): Promise<void> => {
+app.put('/categorie', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const { nom, resume } = req.body;
+    const { nom, resume, id } = req.body;
 
     const query = `UPDATE "categorie" SET nom = $1, resume = $2 WHERE id = $3`;
     await pool.query(query, [nom, resume, id]);
@@ -223,10 +229,9 @@ app.put('/categorie/:id', async (req: Request, res: Response): Promise<void> => 
 });
 
 // UPDATE tache
-app.put('/tache/:id', async (req: Request, res: Response): Promise<void> => {
+app.put('/tache', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const { id_projet, nom, resume, numberPerson, id_utilisateur, status } = req.body;
+    const { id_projet, nom, resume, numberPerson, id_utilisateur, status, id } = req.body;
 
     const query = `UPDATE "tache" SET id_projet = $1, nom = $2, resume = $3, numberPerson = $4, id_utilisateur = $5, status = $6 WHERE id = $7`;
     await pool.query(query, [id_projet, nom, resume, numberPerson, id_utilisateur, status, id]);
@@ -240,13 +245,13 @@ app.put('/tache/:id', async (req: Request, res: Response): Promise<void> => {
 
 // ============================ DELETE ============================
 // DELETE utilisateur
-app.delete('/utilisateur/:id', async (req: Request, res: Response): Promise<void> => {
+app.delete('/utilisateur', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-
+    const { id } = req.body;
+  
     const query = `DELETE FROM "utilisateur" WHERE id = $1`;
     await pool.query(query, [id]);
-
+    
     res.json({ message: "User deleted successfully" });
   } catch (error) {
     console.error('Error deleting user:', error);
@@ -255,9 +260,9 @@ app.delete('/utilisateur/:id', async (req: Request, res: Response): Promise<void
 });
 
 // DELETE projet
-app.delete('/projet/:id', async (req: Request, res: Response): Promise<void> => {
+app.delete('/projet', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
+    const { id } = req.body;
 
     const query = `DELETE FROM "projet" WHERE id = $1`;
     await pool.query(query, [id]);
@@ -270,9 +275,9 @@ app.delete('/projet/:id', async (req: Request, res: Response): Promise<void> => 
 });
 
 // DELETE categorie
-app.delete('/categorie/:id', async (req: Request, res: Response): Promise<void> => {
+app.delete('/categorie', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
+    const { id } = req.body;
 
     const query = `DELETE FROM "categorie" WHERE id = $1`;
     await pool.query(query, [id]);
@@ -285,9 +290,9 @@ app.delete('/categorie/:id', async (req: Request, res: Response): Promise<void> 
 });
 
 // DELETE tache
-app.delete('/tache/:id', async (req: Request, res: Response): Promise<void> => {
+app.delete('/tache', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
+    const { id } = req.body;
 
     const query = `DELETE FROM "tache" WHERE id = $1`;
     await pool.query(query, [id]);

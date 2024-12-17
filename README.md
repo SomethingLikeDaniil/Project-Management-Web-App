@@ -13,7 +13,7 @@ plusieurs catégories pour gestion de projet
 ### 1.4 flux de travail
 
 # Base de donnée
-## User
+## utilisateur
 clé primaire id
 nom: text
 prenom: text
