@@ -1,6 +1,6 @@
 The **Project-Management-Web-App** is a comprehensive web application designed to streamline project management processes. It is divided into two main components: the **Backend** and the **Frontend**.
 
-**Backend**
+# **Backend**
 
 The backend is developed using **Node.js** with the **Express.js** framework and utilizes a **PostgreSQL** database for data storage. Key features include:
 
@@ -11,7 +11,7 @@ The backend is developed using **Node.js** with the **Express.js** framework and
 
 *Some of these features are currently under development.*
 
-**Frontend**
+# **Frontend**
 
 The frontend is developed using **React.js** with the **Redux** state management library. It provides an interactive and responsive user interface, enabling users to:
 
@@ -21,7 +21,7 @@ The frontend is developed using **React.js** with the **Redux** state management
 
 *Some of these features are currently under development.*
 
-**Installation**
+# **Installation**
 
 1. **Clone the Repository**:
 
@@ -69,7 +69,7 @@ and the backend port is: 3005
 
 You can change them as you like.
 
-**Contributions**
+# **Contributions**
 
 Contributions are welcome. To propose improvements or report issues, please open an **issue** or submit a **pull request**.
 
