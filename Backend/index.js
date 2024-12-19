@@ -16,8 +16,10 @@ const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const pg_1 = require("pg");
 const { body } = require('express-validator');
+const cors = require('cors');
 dotenv_1.default.config();
 const app = (0, express_1.default)();
+app.use(cors('*'));
 app.use(express_1.default.json());
 // Variable Constant
 const token = process.env.TOKEN;
@@ -33,6 +35,19 @@ const pool = new pg_1.Pool({
     port: port_BD,
 });
 // ============================ All GET ============================
+// GET login
+app.get('/login', (_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("requête passé");
+    try {
+        const result = yield pool.query('SELECT * FROM "login"');
+        console.log(result.rows, "la requête");
+        _res.json(result.rows);
+    }
+    catch (error) {
+        console.error('Database query error:', error);
+        _res.status(500).json({ error: 'An error occurred while fetching data.' });
+    }
+}));
 // GET utilisateur
 app.get('/utilisateur', (_req, _res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("requête passé");
@@ -84,6 +99,25 @@ app.get("/", (req, res) => {
     res.send("Bienvenue dans notre premiere API");
 });
 // ============================ All POST ============================
+// POST login
+app.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log('Received body:', req.body);
+        const { mail, password } = req.body;
+        if (!mail || !password) {
+            res.status(400).json({ error: "Missing required fields: mail, password" });
+            return;
+        }
+        const query = `INSERT INTO "login" (id, mail, password) VALUES (DEFAULT, $1, $2)`;
+        yield pool.query(query, [mail, password]);
+        console.log("login inséré avec succès :", { mail, password });
+        res.status(201).json({ message: "User created successfully", data: { mail, password } });
+    }
+    catch (error) {
+        console.error('Error inserting user:', error);
+        res.status(500).json({ error: 'An error occurred while creating the user.' });
+    }
+}));
 // POST utilisateur
 app.post('/utilisateur', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

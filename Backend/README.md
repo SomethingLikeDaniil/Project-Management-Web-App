@@ -4,15 +4,24 @@ Develop a project management web app using React (frontend), Node.js (backend), 
 # Fonctionnalité de l'application web
 ## 1. Gestion de Projets
 permet aux utilisateurs de gérer des projets. Chaque projet peut être associé à une ou plusieurs catégories.
-### 1.1 Catégories
+### 1.1 Voir Catégories
 plusieurs catégories pour gestion de projet
-### 1.2 Planifier les tâches
-
-### 1.3 Planning
-
-### 1.4 flux de travail
+### 1.2 Voir tahe
+### 1.3 Voir categorie
 
 # Base de donnée
+## login
+clé primaire id
+mail: text
+password: text
+
+CREATE TABLE login (
+    id SERIAL primary key,
+    mail VARCHAR(255),
+    password VARCHAR(255),
+    id_utilisateur integer references utilisateur(id)
+);
+
 ## utilisateur
 clé primaire id
 nom: text

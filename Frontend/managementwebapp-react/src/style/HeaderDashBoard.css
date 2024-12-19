@@ -1,0 +1,17 @@
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: normal;
+    align-items: normal;
+    align-content: normal;
+    margin: 1rem 1rem;
+}
+
+.flex-separator {
+    flex-grow: 1;
+}
+
+.flex-container > div p,h1 {
+    margin: 0;
+}
