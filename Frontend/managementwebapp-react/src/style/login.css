@@ -1,0 +1,67 @@
+.login {
+  text-align: center;
+}
+
+.createaccount a {
+  color: rgb(93, 93, 255);
+  cursor: pointer;
+}
+
+.login-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .login-logo {
+    animation: login-logo-spin infinite 20s linear;
+  }
+}
+
+.login-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+
+}
+
+form {
+  padding: 2rem;
+  background-color: #475060;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: normal;
+  align-content: normal;
+}
+
+form>* {
+  margin: 1px 0;
+  display: block;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-self: auto;
+  order: 0;
+}
+
+
+.login-link {
+  color: #61dafb;
+}
+
+@keyframes login-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
