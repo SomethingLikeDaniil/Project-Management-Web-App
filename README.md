@@ -13,7 +13,7 @@ The backend is developed using **Node.js** with the **Express.js** framework and
 
 # **Frontend**
 
-The frontend is developed using **React.js** with the **Redux** state management library. It provides an interactive and responsive user interface, enabling users to:
+The frontend is developed using **React.js**. It provides an interactive and responsive user interface, enabling users to:
 
 - **View Projects**: Access project lists and their details.
 - **Manage Tasks**: Create, modify, and monitor task progress.
